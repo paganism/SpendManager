@@ -10,6 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         //test от мурлыки
+        //test #2
         Locale.setDefault(Locale.ENGLISH);
         //Income ins = new Income();
         //ins.incomeIns(500, "Не Мурлычьи деньги");
