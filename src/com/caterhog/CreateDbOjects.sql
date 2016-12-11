@@ -163,3 +163,5 @@ WHEN (newest.id is NULL)
 begin
 	select seq_user_id.nextval into :newest.id from dual;
 end tseq_users;
+
+alter table spend add (user_id INTEGER default 0 NOT NULL);

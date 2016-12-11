@@ -57,6 +57,7 @@ public class Income {
             ResultSet result = statement.executeQuery(
                     "SELECT id, income, balance, description, op_date FROM spend where id =(select max(id) from spend)");
             //result это указатель на первую строку с выборки
+            ///test
             //чтобы вывести данные мы будем использовать
             //метод next() , с помощью которого переходим к следующему элементу
             System.out.println("Текущее финансовое состояние: ");
