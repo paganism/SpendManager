@@ -12,6 +12,7 @@ public class Main {
         //test от мурлыки
         //test #2
         /////////////////////////////////////////////////
+        //test 3
         Locale.setDefault(Locale.ENGLISH);
         //Income ins = new Income();
         //ins.incomeIns(500, "Не Мурлычьи деньги");
