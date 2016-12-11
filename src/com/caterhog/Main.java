@@ -9,10 +9,10 @@ import java.util.Calendar;
 public class Main {
 
     public static void main(String[] args) {
-        Locale.setDefault(Locale.ENGLISH);
+         Locale.setDefault(Locale.ENGLISH);
         //Income ins = new Income();
         //ins.incomeIns(500, "Не Мурлычьи деньги");
-        Consumption cons = new Consumption();
+       // Consumption cons = new Consumption();
         //cons.consumptionIns(1000, "Расходы на конфеты");
         //Balance balance = new Balance();
         //balance.monthConsumption();
@@ -33,6 +33,10 @@ public class Main {
         int user_id=user.speakWithUser();
         System.out.println("ID пользователя: " + user_id);
         System.out.println("Выберите желаемое действие: ");
+
+        Balance stat = new Balance();
+
+
         ch.mainMenu();
         int c;
         while ((c = ch.readNum(scan)) != 5) {
@@ -68,7 +72,37 @@ public class Main {
                     Income.incomeIns(d, e,"kot");
                     break;
                 case 3:
-                    System.out.print("Статистика: ");
+                    System.out.println("Выберите желаемое действие");
+                    ch.showStatistic();
+                    int z;
+                    while((z = ch.readNum(scan)) != 8){
+                        switch (z){
+                            case 1:
+                                stat.dayBalance(user_id);
+                                break;
+                            case 2:
+                                stat.weekBalance(user_id);
+                                break;
+                            case 3:
+                                stat.monthBalance(user_id);
+                                break;
+                            case 4:
+                                stat.dayIncome(user_id);
+                                break;
+                            case 5:
+                                stat.monthIncome(user_id);
+                                break;
+                            case 6:
+                                stat.dayConsumption(user_id);
+                                break;
+                            case 7:
+                                stat.monthConsumption(user_id);
+                                break;
+                            case 8:
+                                ch.mainMenu();
+                                break;
+                        }
+                    }
                     break;
                 case 4:
                     System.out.print("Коррекция: ");

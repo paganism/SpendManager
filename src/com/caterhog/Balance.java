@@ -12,7 +12,7 @@ public class Balance {
 
     }
 
-    public static  void dayBalance() {
+    public static  void dayBalance(int user_id) {
         Locale.setDefault(Locale.ENGLISH);
         //Connection connection = null;
         //URL к базе состоит из протокола:подпротокола://[хоста]:[порта_СУБД]/[БД] и других_сведений
@@ -25,6 +25,7 @@ public class Balance {
             //Загружаем драйвер
             //Connection connection = null;
             Connection connection = CreateConnection.createConnect();
+
            // Class.forName("oracle.jdbc.driver.OracleDriver");
             //System.out.println("Драйвер подключен");
             //Создаём соединение
@@ -34,9 +35,11 @@ public class Balance {
             //Statement: используется для простых случаев без параметров
             //Statement statement = null;
             Statement statement = connection.createStatement();
+            PreparedStatement preparedStatement = null;
             //Выполним запрос
-            ResultSet result = statement.executeQuery(
-                    "SELECT id, income, consumption, balance, description, op_date FROM spend where op_date between trunc(sysdate) and sysdate");
+            preparedStatement = connection.prepareStatement("SELECT id, income, consumption, balance, description, op_date FROM spend where user_id = ? and op_date between trunc(sysdate) and sysdate");
+            preparedStatement.setInt(1, user_id);
+            ResultSet result = preparedStatement.executeQuery();
             //result это указатель на первую строку с выборки
             //чтобы вывести данные мы будем использовать
             //метод next() , с помощью которого переходим к следующему элементу
@@ -53,28 +56,32 @@ public class Balance {
 
         } catch (Exception ex) {
             //выводим наиболее значимые сообщения
-            Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Balance.class.getName()).log(Level.SEVERE, null, ex);
         }  finally {
             if ( CreateConnection.createConnect() != null) {
                 try {
                      CreateConnection.createConnect().close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Balance.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
     }
-    public static  void weekBalance() {
+    public static  void weekBalance(int user_id) {
         Locale.setDefault(Locale.ENGLISH);
         try {
             //Загружаем драйвер
             Connection connection = CreateConnection.createConnect();
             //Statement: используется для простых случаев без параметров
             //Statement statement = null;
+
             Statement statement = connection.createStatement();
+            PreparedStatement preparedStatement = null;
+
+            preparedStatement = connection.prepareStatement("SELECT id, income, consumption, balance, description, op_date FROM spend where user_id = ? and op_date between sysdate-7 and sysdate order by id");
+            preparedStatement.setInt(1, user_id);
             //Выполним запрос
-            ResultSet result = statement.executeQuery(
-                    "SELECT id, income, consumption, balance, description, op_date FROM spend where op_date between sysdate-7 and sysdate order by id");
+             ResultSet result = preparedStatement.executeQuery();
             //result это указатель на первую строку с выборки
             //чтобы вывести данные мы будем использовать
             //метод next() , с помощью которого переходим к следующему элементу
@@ -91,18 +98,18 @@ public class Balance {
 
         } catch (Exception ex) {
             //выводим наиболее значимые сообщения
-            Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Balance.class.getName()).log(Level.SEVERE, null, ex);
         }  finally {
             if ( CreateConnection.createConnect() != null) {
                 try {
                     CreateConnection.createConnect().close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Balance.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
     }
-    public static  void monthBalance() {
+    public static  void monthBalance(int user_id) {
         Locale.setDefault(Locale.ENGLISH);
         try {
             //Загружаем драйвер
@@ -110,9 +117,14 @@ public class Balance {
             //Statement: используется для простых случаев без параметров
             //Statement statement = null;
             Statement statement = connection.createStatement();
+
+            PreparedStatement preparedStatement = null;
+
+            preparedStatement = connection.prepareStatement("SELECT id, income, consumption, balance, description, op_date FROM spend where user_id =? and op_date between sysdate-30 and sysdate order by id");
+            preparedStatement.setInt(1, user_id);
+
             //Выполним запрос
-            ResultSet result = statement.executeQuery(
-                    "SELECT id, income, consumption, balance, description, op_date FROM spend where op_date between sysdate-30 and sysdate order by id");
+            ResultSet result = preparedStatement.executeQuery();
             //result это указатель на первую строку с выборки
             //чтобы вывести данные мы будем использовать
             //метод next() , с помощью которого переходим к следующему элементу
@@ -129,18 +141,18 @@ public class Balance {
 
         } catch (Exception ex) {
             //выводим наиболее значимые сообщения
-            Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Balance.class.getName()).log(Level.SEVERE, null, ex);
         }  finally {
             if ( CreateConnection.createConnect() != null) {
                 try {
                     CreateConnection.createConnect().close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Balance.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
     }
-    public static  void dayIncome() {
+    public static  void dayIncome(int user_id) {
         Locale.setDefault(Locale.ENGLISH);
         try {
             //Загружаем драйвер
@@ -148,10 +160,15 @@ public class Balance {
             //Statement: используется для простых случаев без параметров
             //Statement statement = null;
             Statement statement = connection.createStatement();
+
+            PreparedStatement preparedStatement = null;
+
+            preparedStatement = connection.prepareStatement("SELECT sum(income) FROM spend where user_id=? and op_date between trunc(sysdate) and sysdate");
+            preparedStatement.setInt(1, user_id);
+
             //Выполним запрос
-            ResultSet result = statement.executeQuery(
-                    "SELECT sum(income) FROM spend where op_date between trunc(sysdate) and sysdate");
-            //result это указатель на первую строку с выборки
+            ResultSet result = preparedStatement.executeQuery();
+             //result это указатель на первую строку с выборки
             //чтобы вывести данные мы будем использовать
             //метод next() , с помощью которого переходим к следующему элементу
             System.out.println("Движение денег за день: ");
@@ -160,29 +177,32 @@ public class Balance {
             }
         } catch (Exception ex) {
             //выводим наиболее значимые сообщения
-            Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Balance.class.getName()).log(Level.SEVERE, null, ex);
         }  finally {
             if ( CreateConnection.createConnect() != null) {
                 try {
                     CreateConnection.createConnect().close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Balance.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
     }
-    public static  void monthIncome() {
+    public static  void monthIncome(int user_id) {
         Locale.setDefault(Locale.ENGLISH);
         try {
             //Загружаем драйвер
             Connection connection = CreateConnection.createConnect();
             //Statement: используется для простых случаев без параметров
             //Statement statement = null;
-            Statement statement = connection.createStatement();
+            PreparedStatement preparedStatement = null;
+
+            preparedStatement = connection.prepareStatement("SELECT sum(income) FROM spend where user_id=? and op_date between trunc(sysdate-30) and sysdate");
+            preparedStatement.setInt(1, user_id);
+
             //Выполним запрос
-            ResultSet result = statement.executeQuery(
-                    "SELECT sum(income) FROM spend where op_date between trunc(sysdate-30) and sysdate");
-            //result это указатель на первую строку с выборки
+            ResultSet result = preparedStatement.executeQuery();
+             //result это указатель на первую строку с выборки
             //чтобы вывести данные мы будем использовать
             //метод next() , с помощью которого переходим к следующему элементу
             System.out.println("Движение денег за 30 дней: ");
@@ -191,28 +211,31 @@ public class Balance {
             }
         } catch (Exception ex) {
             //выводим наиболее значимые сообщения
-            Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Balance.class.getName()).log(Level.SEVERE, null, ex);
         }  finally {
             if ( CreateConnection.createConnect() != null) {
                 try {
                     CreateConnection.createConnect().close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Balance.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
     }
-    public static  void dayConsumption() {
+    public static  void dayConsumption(int user_id) {
         Locale.setDefault(Locale.ENGLISH);
         try {
             //Загружаем драйвер
             Connection connection = CreateConnection.createConnect();
             //Statement: используется для простых случаев без параметров
             //Statement statement = null;
-            Statement statement = connection.createStatement();
+
+            PreparedStatement preparedStatement = null;
+
+            preparedStatement = connection.prepareStatement("SELECT sum(consumption) FROM spend where user_id=? and op_date between trunc(sysdate) and sysdate");
+            preparedStatement.setInt(1, user_id);
             //Выполним запрос
-            ResultSet result = statement.executeQuery(
-                    "SELECT sum(consumption) FROM spend where op_date between trunc(sysdate) and sysdate");
+            ResultSet result = preparedStatement.executeQuery();
             //result это указатель на первую строку с выборки
             //чтобы вывести данные мы будем использовать
             //метод next() , с помощью которого переходим к следующему элементу
@@ -222,18 +245,18 @@ public class Balance {
             }
         } catch (Exception ex) {
             //выводим наиболее значимые сообщения
-            Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Balance.class.getName()).log(Level.SEVERE, null, ex);
         }  finally {
             if ( CreateConnection.createConnect() != null) {
                 try {
                     CreateConnection.createConnect().close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Balance.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
     }
-    public static  void monthConsumption() {
+    public static  void monthConsumption(int user_id) {
         Locale.setDefault(Locale.ENGLISH);
         try {
             //Загружаем драйвер
@@ -241,9 +264,12 @@ public class Balance {
             //Statement: используется для простых случаев без параметров
             //Statement statement = null;
             Statement statement = connection.createStatement();
+            PreparedStatement preparedStatement = null;
+
+            preparedStatement = connection.prepareStatement("\"SELECT sum(consumption) FROM spend where where user_id=? and op_date between trunc(sysdate-30) and sysdate");
+            preparedStatement.setInt(1, user_id);
             //Выполним запрос
-            ResultSet result = statement.executeQuery(
-                    "SELECT sum(consumption) FROM spend where op_date between trunc(sysdate-30) and sysdate");
+            ResultSet result = preparedStatement.executeQuery();
             //result это указатель на первую строку с выборки
             //чтобы вывести данные мы будем использовать
             //метод next() , с помощью которого переходим к следующему элементу
@@ -253,13 +279,13 @@ public class Balance {
             }
         } catch (Exception ex) {
             //выводим наиболее значимые сообщения
-            Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Balance.class.getName()).log(Level.SEVERE, null, ex);
         }  finally {
             if ( CreateConnection.createConnect() != null) {
                 try {
                     CreateConnection.createConnect().close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Balance.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

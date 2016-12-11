@@ -159,5 +159,21 @@ public class ChekInput {
             System.out.println(entry.getKey() + ". " + entry.getValue());
         }
     }
+
+    public static void showStatistic() {
+        Map<Integer, String> categorySelect = new HashMap<Integer, String>();
+        categorySelect.put(1,	"Баланс за день");
+        categorySelect.put(2,	"Баланс за неделю");
+        categorySelect.put(3,	"Баланс за месяц");
+        categorySelect.put(4,	"Доход за день");
+        categorySelect.put(5,	"Доход за месяц");
+        categorySelect.put(6,	"Расход за день");
+        categorySelect.put(7,	"Расход за месяц");
+        categorySelect.put(8,	"Выход в основное меню");
+        for(Map.Entry entry : categorySelect.entrySet()) {
+            System.out.println(entry.getKey() + ". " + entry.getValue());
+        }
+    }
+
 }
 
