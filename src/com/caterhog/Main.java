@@ -13,6 +13,7 @@ public class Main {
         //test #2
         /////////////////////////////////////////////////
         //test 3
+        //test 4
         Locale.setDefault(Locale.ENGLISH);
         //Income ins = new Income();
         //ins.incomeIns(500, "Не Мурлычьи деньги");
