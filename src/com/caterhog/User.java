@@ -56,13 +56,13 @@ public class User {
 
         } catch (Exception ex) {
             //выводим наиболее значимые сообщения
-            Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (CreateConnection.createConnect() != null) {
                 try {
                     CreateConnection.createConnect().close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

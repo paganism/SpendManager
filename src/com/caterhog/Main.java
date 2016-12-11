@@ -9,10 +9,11 @@ import java.util.Calendar;
 public class Main {
 
     public static void main(String[] args) {
+        //test от мурлыки
         Locale.setDefault(Locale.ENGLISH);
         //Income ins = new Income();
         //ins.incomeIns(500, "Не Мурлычьи деньги");
-        Consumption cons = new Consumption();
+       // Consumption cons = new Consumption();
         //cons.consumptionIns(1000, "Расходы на конфеты");
         //Balance balance = new Balance();
         //balance.monthConsumption();
