@@ -148,3 +148,18 @@ insert into category (id, name) values (8, 'Путешествия');
 insert into category (id, name) values (9, 'Подарки');
 insert into category (id, name) values (10, 'Основное');
 insert into category (id, name) values (11, 'Дети');
+
+create table users (username VARCHAR 255, id NUMBER default NULL);
+
+create UNIQUE index username_idx on users(username);
+
+CREATE SEQUENCE  "TEST"."SEQ_USER_ID"  MINVALUE 1 MAXVALUE 2147483647 INCREMENT BY 1 START WITH 20 NOCACHE  ORDER  CYCLE ;
+
+create or replace TRIGGER test.tseq_users
+BEFORE INSERT  ON test.USERS
+REFERENCING NEW AS NEWEST OLD AS OLD
+FOR EACH ROW
+WHEN (newest.id is NULL)
+begin
+	select seq_user_id.nextval into :newest.id from dual;
+end tseq_users;

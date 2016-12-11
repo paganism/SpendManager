@@ -12,7 +12,7 @@ public class Income {
 
     }
 
-    public static void incomeIns(double x, String y) {
+    public static void incomeIns(double x, String y, String username) {
         Locale.setDefault(Locale.ENGLISH);
         Connection connection = null;
         //URL к базе состоит из протокола:подпротокола://[хоста]:[порта_СУБД]/[БД] и других_сведений
@@ -30,16 +30,20 @@ public class Income {
             //System.out.println("Соединение установлено");
             //PreparedStatement: предварительно компилирует запросы, которые могут содержать входные параметры
             PreparedStatement preparedStatement = null;
-            preparedStatement = connection.prepareStatement("INSERT INTO spend (income, description) values(?, ?)");
+            preparedStatement = connection.prepareStatement("INSERT INTO spend (income, description, username) values(?, ?, ?)");
             //preparedStatement.setString(1, "1500");
             preparedStatement.setDouble(1, x);
             preparedStatement.setString(2, y);
+            preparedStatement.setString(3, username);
             //метод принимает значение без параметров
             //темже способом можно сделать и UPDATE
             preparedStatement.executeUpdate();
 
             preparedStatement = connection.prepareStatement(
-                    "update spend set balance=income + (select balance from spend where id in (select max(id)-1 from spend)) where id in (select max(id) from spend)");
+                    //"update spend set balance=income + (select balance from spend where id in (select max(id)-1 from spend)) where id in (select max(id) from spend)");
+                    "UPDATE spend set balance = (select sum(income)-sum(consumption) from spend where username = ?) where id=(select max(id) from spend where username = ?)");
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, username);
             //"UPDATE spend set balance = (select sum(income)-sum(consumption) from spend) where id=(select max(id) from spend)");
             //чтобы выполнить update, нужо вызвать executeUpdate()
             preparedStatement.executeUpdate();
@@ -67,13 +71,13 @@ public class Income {
 
         } catch (Exception ex) {
             //выводим наиболее значимые сообщения
-            Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Income.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Income.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

@@ -26,13 +26,14 @@ public class Main {
         cons.consumptionIns(1000,z);
         return;
             } */
-        System.out.println("    Менеджер расходов");
-        System.out.println("Выберите желаемое действие: "
-                + "\n 1. Внести расход (введите 1) "
-                + "\n 2. Внести доход (введите 2) "
-                + "\n 3. Просмотр статистики (введите 3) "
-                + "\n 4. Редактирование (введите 4) "
-                + "\n 5. Выход (введите 5) ");
+        //System.out.println("    Менеджер расходов");
+       // System.out.println("Укажите имя пользователя: ");
+       // String username = ch.readString(scan);
+        User user = new User();
+        int user_id=user.speakWithUser();
+        System.out.println("ID пользователя: " + user_id);
+        System.out.println("Выберите желаемое действие: ");
+        ch.mainMenu();
         int c;
         while ((c = ch.readNum(scan)) != 5) {
 
@@ -50,25 +51,13 @@ public class Main {
                     }*/
                     System.out.print("Укажите сумму расхода: ");
                     double a = ch.readDouble(scan);
-                    System.out.print("Укажите категорию расхода: "
-                            + "\n  0	Любая"
-                            + "\n  1	Еда"
-                            + "\n  2	Кафе и ресторан"
-                            + "\n  3	Развлечения"
-                            + "\n  4	Одежда"
-                            + "\n  5	Покупки"
-                            + "\n  6	Отпуск"
-                            + "\n  7	Спорт"
-                            + "\n  8	Путешествия"
-                            + "\n  9	Подарки"
-                            + "\n  10  Основное"
-                            + "\n  11  Дети"
-                            + "\n");
+                    System.out.print("Укажите категорию расхода: ");
+                    ch.showCategory();
                     int t = ch.readCategory(scan);
                     scan.nextLine();
                     System.out.print("Укажите комментарий: ");
                     String b = ch.readString1(scan);
-                    Expense.consumptionIns(a, t, b, data);
+                    Expense.consumptionIns(a, t, b, data, user_id);
                     break;
                 case 2:
                     System.out.print("Укажите сумму дохода: ");
@@ -76,7 +65,7 @@ public class Main {
                     scan.nextLine();
                     System.out.print("Укажите источник дохода: ");
                     String e = ch.readString(scan);
-                    Income.incomeIns(d, e);
+                    Income.incomeIns(d, e,"kot");
                     break;
                 case 3:
                     System.out.print("Статистика: ");
@@ -91,12 +80,7 @@ public class Main {
                     System.out.print("Неверный выбор... ");
                     break;
             }
-            System.out.println("Выберите желаемое действие: "
-                    + "\n 1. Внести расход (введите 1) "
-                    + "\n 2. Внести доход (введите 2) "
-                    + "\n 3. Просмотр статистики (введите 3) "
-                    + "\n 4. Редактирование (введите 4) "
-                    + "\n 5. Выход (введите 5) ");
+            ch.mainMenu();
         }
     }
 }

@@ -12,7 +12,7 @@ public class Expense {
 
     }
 
-    public static void consumptionIns(double x, int t, String y, String data) {
+    public static void consumptionIns(double x, int t, String y, String data, int user_id) {
         Locale.setDefault(Locale.ENGLISH);
         Connection connection = null;
         //URL к базе состоит из протокола:подпротокола://[хоста]:[порта_СУБД]/[БД] и других_сведений
@@ -31,30 +31,33 @@ public class Expense {
             //PreparedStatement: предварительно компилирует запросы, которые могут содержать входные параметры
             PreparedStatement preparedStatement = null;
             if (data.equals("")) {
-                preparedStatement = connection.prepareStatement("INSERT INTO spend (consumption, category_id, description) values(?, ?, ?)");
+                preparedStatement = connection.prepareStatement("INSERT INTO spend (consumption, category_id, description, user_id) values(?, ?, ?, ?)");
                 //preparedStatement.setString(1, "1500");
                 preparedStatement.setDouble(1, x);
                 preparedStatement.setDouble(2, t);
                 preparedStatement.setString(3, y);
-                //preparedStatement.setString(4, data);
+                preparedStatement.setInt(4, user_id);
                 //метод принимает значение без параметров
                 //темже способом можно сделать и UPDATE
                 preparedStatement.executeUpdate();
             } else {
-                preparedStatement = connection.prepareStatement("INSERT INTO spend (consumption, category_id, description, op_date) values(?, ?, ?, to_date(?, 'dd.mm.yy'))");
+                preparedStatement = connection.prepareStatement("INSERT INTO spend (consumption, category_id, description, op_date, user_id) values(?, ?, ?, to_date(?, 'dd.mm.yy'), ?)");
                 //preparedStatement.setString(1, "1500");
                 preparedStatement.setDouble(1, x);
                 preparedStatement.setDouble(2, t);
                 preparedStatement.setString(3, y);
                 preparedStatement.setString(4, data);
+                preparedStatement.setInt(5, user_id);
                 //метод принимает значение без параметров
                 //темже способом можно сделать и UPDATE
                 preparedStatement.executeUpdate();
             }
             preparedStatement = connection.prepareStatement(
-                    "update spend set balance = (select balance from spend where id in (select max(id)-1 from spend)) - consumption where id in (select max(id) from spend)");
-            //"UPDATE spend set balance = (select sum(income)-sum(consumption) from spend) where id=(select max(id) from spend)");
+                    //"update spend set balance = (select balance from spend where id in (select max(id)-1 from spend)) - consumption where id in (select max(id) from spend)");
+            "UPDATE spend set balance = (select sum(income)-sum(consumption) from spend where user_id = ?) where id=(select max(id) from spend where user_id = ?)");
             //чтобы выполнить update, нужо вызвать executeUpdate()
+            preparedStatement.setInt(1, user_id);
+            preparedStatement.setInt(2, user_id);
             preparedStatement.executeUpdate();
 
             //Далее нужно показать пользователю то, что он потратил и текущий баланс
@@ -64,7 +67,7 @@ public class Expense {
             statement = connection.createStatement();
             //Выполним запрос
             ResultSet result = statement.executeQuery(
-                    "SELECT id, consumption, balance, (select name from category where id = category_id) as category, description, op_date FROM spend where id =(select max(id) from spend)");
+                    "SELECT id, (select username from users where id = user_id) as username, consumption, balance, (select name from category where id = category_id) as category, description, op_date FROM spend where id =(select max(id) from spend)");
             //result это указатель на первую строку с выборки
             //чтобы вывести данные мы будем использовать
             //метод next() , с помощью которого переходим к следующему элементу
@@ -72,6 +75,7 @@ public class Expense {
             while (result.next()) {
                 System.out.println("id операции: " + result.getInt("id")
                         + "\t Дата: " + result.getString("op_date")
+                        + "\t Пользователь: " + result.getString("username")
                         + "\t Расход: " + result.getInt("consumption")
                         + "\t Баланс: " + result.getInt("balance")
                         + "\t Категория: " + result.getString("category")
@@ -82,13 +86,13 @@ public class Expense {
 
         } catch (Exception ex) {
             //выводим наиболее значимые сообщения
-            Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Expense.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException ex) {
-                    Logger.getLogger(Select.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Expense.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
