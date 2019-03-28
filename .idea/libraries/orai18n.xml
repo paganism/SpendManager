@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="orai18n">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/src/com/caterhog/orai18n.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
